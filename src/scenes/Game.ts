@@ -1,24 +1,47 @@
 import Phaser from 'phaser';
+import Dude from '../class/enemy/Dude';
+import EnemyEngine from '../class/engine/Enemy';
+import SpawnerEngine from '../class/engine/Spawner';
 
-export default class Demo extends Phaser.Scene {
+export default class ETD extends Phaser.Scene {
+  map!: Phaser.Tilemaps.Tilemap;
+  tileset!: Phaser.Tilemaps.Tileset;
+  enemyEngine!: EnemyEngine;
+  spawnerEngine!: SpawnerEngine;
+
   constructor() {
     super('GameScene');
   }
 
   preload() {
-    this.load.image('logo', 'assets/phaser3-logo.png');
+    this.load.image('mob', 'assets/mob.png');
+    // this.load.image('grass', 'assets/grass.png');
+    // this.load.image('dirt', 'assets/dirt.png');
+    this.load.image('base_tiles', 'assets/map/sci-fi-tiles.png');
+    this.load.tilemapTiledJSON('tilemap', 'assets/map/map.json');
   }
 
   create() {
-    const logo = this.add.image(400, 70, 'logo');
+    this.initEngines();
+    this.initMap();
 
-    this.tweens.add({
-      targets: logo,
-      y: 350,
-      duration: 1500,
-      ease: 'Sine.inOut',
-      yoyo: true,
-      repeat: -1
-    });
+    this.start();
+  }
+
+  protected initEngines() {
+    this.enemyEngine = new EnemyEngine(this);
+    this.spawnerEngine = new SpawnerEngine(this, this.enemyEngine);
+  }
+
+  protected initMap() {
+    this.map = this.make.tilemap({ key: 'tilemap' });
+    this.tileset = this.map.addTilesetImage('etd', 'base_tiles')
+
+    this.map.createLayer('Ground', this.tileset, 0, 0);
+    this.map.createLayer('Upper', this.tileset, 0, 0);
+  }
+
+  protected start() {
+    this.spawnerEngine.spawnWave();
   }
 }
