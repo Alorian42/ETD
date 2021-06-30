@@ -1,5 +1,5 @@
 export default abstract class Enemy {
-    id = 0;
+    id: string = '';
     name: string = '';
     self?: Phaser.GameObjects.Sprite;
     x = 0;
@@ -22,6 +22,8 @@ export default abstract class Enemy {
     health = 1;
     hp?: Phaser.GameObjects.Text;
     removed = false;
+    movableGracePeriod = 0;
+    velocitySign = -1;
 
     constructor(x: number, y: number) {
         this.x = x;
@@ -47,16 +49,29 @@ export default abstract class Enemy {
         this.updateHP();
     }
 
-    setId(id: number) {
+    setId(id: string) {
         this.id = id;
     }
 
-    setVelocity({ x = 0, y = 0 } = {}) {
+    setVelocity({ x = 0, y = 0, updateAngle = false } = {}) {
+        if (!this.isMovable) {
+            return;
+        }
+
         const vector = Math.sqrt(x * x + y * y);
-        const maxSpeed = Math.sqrt(this.maxVelocity * this.maxVelocity / 2)
+        const maxSpeed = Math.sqrt(this.maxVelocity * this.maxVelocity / 2);
 
         this.velocity.x = vector <= this.maxVelocity ? x : maxSpeed * Math.sign(x);
         this.velocity.y = vector <= this.maxVelocity ? y : maxSpeed * Math.sign(y);
+        
+        if (updateAngle) {
+            this.velocitySign *= (-1);
+            this.velocity.x *= this.velocitySign;
+            this.velocity.y *= this.velocitySign;
+        }
+
+
+        this.isMovable = false;
     }
 
     updateHP() {
@@ -85,6 +100,10 @@ export default abstract class Enemy {
         this.self.body.velocity.x = this.velocity.x;
         this.self.body.velocity.y = this.velocity.y;
         this.setPosition(this.self.body.position.x, this.self.body.position.y);
+
+        if (this.movableGracePeriod >= 1) {
+            this.movableGracePeriod--;
+        }
     }
 
     kill() {
@@ -93,5 +112,13 @@ export default abstract class Enemy {
 
     get isDead(): boolean {
         return this.health <= 0;
+    }
+
+    get isMovable(): boolean {
+        return this.movableGracePeriod === 0;
+    }
+
+    set isMovable(value: boolean) {
+        this.movableGracePeriod = value ? 0 : 60;
     }
 }

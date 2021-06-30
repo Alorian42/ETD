@@ -6,9 +6,13 @@ import ETD from '../../scenes/Game';
 
 export default class EnemyEngine extends Engine {
     enemies: Enemy[] = [];
+    textNumberOfEnemies!: Phaser.GameObjects.Text;
 
     constructor(scene: ETD) {
         super(scene);
+
+        this.textNumberOfEnemies = this.scene.add.text(400, 50, this.enemies.length.toString());
+        this.textNumberOfEnemies.setDepth(200);
 
         this.scene.game.events.on('step', () => {
             this.enemyLoop();
@@ -19,22 +23,26 @@ export default class EnemyEngine extends Engine {
         this.enemies.forEach(enemy => {
             enemy.update();
 
-            const i = this.scene.upperLayer.getTilesWithinWorldXY(
+            const i = this.scene.platformLayer.getTilesWithinWorldXY(
                 enemy.x, enemy.y,
                 enemy.self?.width ?? 1,
                 enemy.self?.height ?? 1,
             );
 
             if (i.some(tile => tile.index !== -1)) {
-                enemy.setVelocity();
-                enemy.kill();
+                enemy.setVelocity({
+                    y: enemy.velocity.x,
+                    x: enemy.velocity.y,
+                    updateAngle: true,
+                });
             }
         });
 
         this.enemies = this.enemies.filter(e => !e.removed);
+        this.textNumberOfEnemies.setText(this.enemies.length.toString());
     }
 
-    spawn(enemy: Enemy, x?: number, y?: number): number {
+    spawn(enemy: Enemy, x?: number, y?: number): string {
         if (x !== undefined && y !== undefined) {
             enemy.setPosition(x, y);
         }
@@ -53,7 +61,7 @@ export default class EnemyEngine extends Engine {
         return id;
     }
 
-    move(id: number, { x = 0, y = 0 }) {
+    move(id: string, { x = 0, y = 0 }) {
         const enemy = this.enemies.find(e => e.id === id);
 
         if (enemy) {
@@ -61,7 +69,7 @@ export default class EnemyEngine extends Engine {
         }
     }
 
-    kill(id: number) {
+    kill(id: string) {
         const enemy = this.enemies.find(e => e.id === id);
 
         if (enemy) {
@@ -69,7 +77,7 @@ export default class EnemyEngine extends Engine {
         }
     }
 
-    protected getEnemyId(): number {
+    protected getEnemyId(): string {
         return uuidv4();
     }
 }

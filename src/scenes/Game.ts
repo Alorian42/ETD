@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import Dude from '../class/enemy/Dude';
 import EnemyEngine from '../class/engine/Enemy';
 import SpawnerEngine from '../class/engine/Spawner';
 
@@ -28,13 +27,8 @@ export default class ETD extends Phaser.Scene {
   create() {
     this.initEngines();
     this.initMap();
-    this.initPhysics();
 
     this.start();
-  }
-
-  protected initPhysics() {
-    // this.physics.start
   }
 
   protected initEngines() {
