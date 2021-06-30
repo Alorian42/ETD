@@ -6,6 +6,7 @@ import { START_POINT } from '../../constants/global';
 import Enemy from '../enemy/Enemy';
 import RedDude from '../enemy/RedDude';
 import Duck from '../enemy/Duck';
+import Teemo from '../enemy/Teemo';
 
 export default class SpawnerEngine extends Engine {
     enemyEngine!: EnemyEngine;
@@ -17,7 +18,7 @@ export default class SpawnerEngine extends Engine {
     }
 
     spawnWave() {
-        this.spawnDude(START_POINT.x, START_POINT.y);
+        this.spawnTeemo(START_POINT.x, START_POINT.y);
         this.scene.time.addEvent({
             delay: 3000,
             callback: () => {
@@ -41,6 +42,19 @@ export default class SpawnerEngine extends Engine {
             },
             loop: true,
         });
+
+        this.scene.time.addEvent({
+            delay: 60000,
+            callback: () => {
+                this.spawnTeemo(START_POINT.x, START_POINT.y);
+            },
+            loop: true,
+        });
+    }
+
+    protected spawnTeemo(x = 0, y = 0) {
+        const dude = new Teemo(x, y);
+        this.spawn(dude, x, y, 2);
     }
 
     protected spawnRedDude(x = 0, y = 0) {
@@ -58,8 +72,8 @@ export default class SpawnerEngine extends Engine {
         this.spawn(dude, x, y);
     }
 
-    protected spawn(enemy: Enemy, x = 0, y = 0) {
-        const id = this.enemyEngine.spawn(enemy, x, y);
+    protected spawn(enemy: Enemy, x = 0, y = 0, scale = 1) {
+        const id = this.enemyEngine.spawn(enemy, x, y, scale);
 
         const isHorizontal = Math.floor((Math.random() * 2)) === 1;
 

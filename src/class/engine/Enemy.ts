@@ -52,12 +52,12 @@ export default class EnemyEngine extends Engine {
         this.textNumberOfEnemies.setText(this.enemyText);
     }
 
-    spawn(enemy: Enemy, x?: number, y?: number): string {
+    spawn(enemy: Enemy, x?: number, y?: number, scale = 1): string {
         if (x !== undefined && y !== undefined) {
             enemy.setPosition(x, y);
         }
 
-        const obj = this.scene.physics.add.sprite(enemy.x, enemy.y, enemy.name);
+        const obj = this.scene.physics.add.sprite(enemy.x, enemy.y, enemy.name).setScale(scale, scale);
         const hp = this.scene.add.text(0, 0, enemy.health.toString(), HP_STYLE);
 
         enemy.setSelf(obj);
