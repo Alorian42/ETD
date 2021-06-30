@@ -30,6 +30,8 @@ export default class ETD extends Phaser.Scene {
 
   preload() {
     this.load.image('mob', 'assets/mob.png');
+    this.load.image('duck', 'assets/duck.png');
+    this.load.image('red_dude', 'assets/red_dude.png');
     this.load.image('tower', 'assets/tower.png');
     this.load.image('bullet', 'assets/bullet.png');
     this.load.image('base_tiles', 'assets/map/sci-fi-tiles.png');
