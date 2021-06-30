@@ -9,6 +9,10 @@ export default class ETD extends Phaser.Scene {
   enemyEngine!: EnemyEngine;
   spawnerEngine!: SpawnerEngine;
 
+  groundLayer!: Phaser.Tilemaps.TilemapLayer;
+  upperLayer!: Phaser.Tilemaps.TilemapLayer;
+  platformLayer!: Phaser.Tilemaps.TilemapLayer;
+
   constructor() {
     super('GameScene');
   }
@@ -24,8 +28,13 @@ export default class ETD extends Phaser.Scene {
   create() {
     this.initEngines();
     this.initMap();
+    this.initPhysics();
 
     this.start();
+  }
+
+  protected initPhysics() {
+    // this.physics.start
   }
 
   protected initEngines() {
@@ -37,8 +46,10 @@ export default class ETD extends Phaser.Scene {
     this.map = this.make.tilemap({ key: 'tilemap' });
     this.tileset = this.map.addTilesetImage('etd', 'base_tiles')
 
-    this.map.createLayer('Ground', this.tileset, 0, 0);
-    this.map.createLayer('Upper', this.tileset, 0, 0);
+    this.groundLayer = this.map.createLayer('Ground', this.tileset, 0, 0);
+    this.upperLayer = this.map.createLayer('Upper', this.tileset, 0, 0);
+    this.platformLayer = this.map.createLayer('Platforms', this.tileset, 0, 0);
+    this.upperLayer.setCollisionByExclusion([-1]);
   }
 
   protected start() {

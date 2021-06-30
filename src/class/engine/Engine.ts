@@ -1,7 +1,9 @@
-export default abstract class Engine {
-    scene!: Phaser.Scene;
+import ETD from '../../scenes/Game';
 
-    constructor(scene: Phaser.Scene) {
+export default abstract class Engine {
+    scene!: ETD;
+
+    constructor(scene: ETD) {
         this.scene = scene;
     }
 }
