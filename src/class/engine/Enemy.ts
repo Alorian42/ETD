@@ -4,15 +4,18 @@ import Engine from './Engine';
 import { HP_STYLE } from '../../constants/global';
 import ETD from '../../scenes/Game';
 import ScoreEngine from './Score';
+import GoldEngine from './Gold';
 
 export default class EnemyEngine extends Engine {
-    scoreEngine!: ScoreEngine
+    scoreEngine!: ScoreEngine;
+    goldEngine!: GoldEngine;
     enemies: Enemy[] = [];
     textNumberOfEnemies!: Phaser.GameObjects.Text;
 
-    constructor(scene: ETD, scoreEngine: ScoreEngine) {
+    constructor(scene: ETD, scoreEngine: ScoreEngine, goldEngine: GoldEngine) {
         super(scene);
         this.scoreEngine = scoreEngine;
+        this.goldEngine = goldEngine;
 
         this.textNumberOfEnemies = this.scene.add.text(400, 50, this.enemyText);
         this.textNumberOfEnemies.setDepth(200);
@@ -41,7 +44,10 @@ export default class EnemyEngine extends Engine {
             }
         });
 
-        this.enemies.filter(enemy => enemy.removed).map(enemy => this.scoreEngine.onEnemyKill(enemy));
+        this.enemies.filter(enemy => enemy.removed).map(enemy => {
+            this.scoreEngine.onEnemyKill(enemy);
+            this.goldEngine.onEnemyKill(enemy);
+        });
         this.enemies = this.enemies.filter(e => !e.removed);
         this.textNumberOfEnemies.setText(this.enemyText);
     }

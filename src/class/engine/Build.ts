@@ -2,17 +2,20 @@ import Engine from './Engine';
 import ETD from '../../scenes/Game';
 import UiEngine from './UI';
 import TowerEngine from './Tower';
+import GoldEngine from './Gold';
 
 export default class BuildEngine extends Engine {
     uiEngine!: UiEngine;
+    goldEngine!: GoldEngine;
     towerEngine!: TowerEngine;
     buildMode = false;
     towerBuild?: Phaser.GameObjects.Sprite;
     towerRange?: Phaser.GameObjects.Arc;
 
-    constructor(scene: ETD, uiEngine: UiEngine, towerEngine: TowerEngine) {
+    constructor(scene: ETD, uiEngine: UiEngine, towerEngine: TowerEngine, goldEngine: GoldEngine) {
         super(scene);
 
+        this.goldEngine = goldEngine;
         this.towerEngine = towerEngine;
         this.uiEngine = uiEngine;
         this.uiEngine.initBuildButton(() => this.build());
@@ -53,7 +56,8 @@ export default class BuildEngine extends Engine {
 
                 if (canBuildHere) {
                     this.cancel();
-                    this.towerEngine.buildBasicTower(x, y);
+                    const tower = this.towerEngine.buildBasicTower(x, y);
+                    this.goldEngine.onTowerBuild(tower);
                 }
             }
         });
@@ -65,7 +69,11 @@ export default class BuildEngine extends Engine {
         });
     }
 
-    build(radius = 100) {
+    build(radius = 100, cost = 75) {
+        if (this.goldEngine.gold < cost) {
+            return false;
+        }
+
         window.setTimeout(() => {
             this.buildMode = true;
         });
@@ -75,6 +83,8 @@ export default class BuildEngine extends Engine {
         this.towerBuild = this.scene.add.sprite(x, y, 'tower')
             .setScale(2);
         this.towerRange = this.scene.add.circle(x, y, radius).setDepth(200).setStrokeStyle(5, 0xff0000);
+
+        return true;
     }
 
     cancel() {

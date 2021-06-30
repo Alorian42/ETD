@@ -25,6 +25,7 @@ export default abstract class Enemy {
     movableGracePeriod = 0;
     velocitySign = -1;
     scoreValue = 0;
+    goldValue = 0;
 
     constructor(x: number, y: number) {
         this.x = x;

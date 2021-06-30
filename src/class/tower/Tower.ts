@@ -31,6 +31,11 @@ export default abstract class Tower {
     maxDamage = 0;
     radius = 0;
     attackSpeed = 1000; // delay between attacks in MS
+    cost = 0;
+
+    static get TOWER_COST() {
+        return 0;
+    }
 
     canAttack = true;
     lastTarget: string | null = null;

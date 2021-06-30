@@ -1,5 +1,6 @@
 import Engine from './Engine';
 import ETD from '../../scenes/Game';
+import Basic from '../tower/Basic';
 
 export default class UiEngine extends Engine {
     startButton!: Phaser.GameObjects.Text;
@@ -10,7 +11,7 @@ export default class UiEngine extends Engine {
     }
 
     initStartButton(callback: Function) {
-        this.startButton = this.scene.add.text(20, 20, 'Start', { backgroundColor: '#000', fontSize: '20px' });
+        this.startButton = this.scene.add.text(20, 220, 'Start', { backgroundColor: '#000', fontSize: '20px' });
         this.startButton.setInteractive();
         this.startButton.setDepth(200);
 
@@ -23,13 +24,16 @@ export default class UiEngine extends Engine {
     }
 
     initBuildButton(callback: Function) {
-        this.buildButton = this.scene.add.text(20, 60, 'Build Basic Tower', { backgroundColor: '#000', fontSize: '20px' });
+        this.buildButton = this.scene.add.text(20, 60, `Build Basic Tower (${Basic.TOWER_COST}g)`, { backgroundColor: '#000', fontSize: '20px' });
         this.buildButton.setInteractive();
         this.buildButton.setDepth(200);
         this.buildButton.setVisible(false);
 
         this.buildButton.on('pointerdown', () => {
-            callback();
+            const res = callback();
+            if (!res) {
+                return;
+            }
 
             this.buildButton.setVisible(false);
         });

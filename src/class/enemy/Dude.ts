@@ -11,4 +11,5 @@ export default class Dude extends Enemy {
     };
 
     scoreValue = 100;
+    goldValue = 10;
 }
