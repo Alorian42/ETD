@@ -3,10 +3,10 @@ import Enemy from './Enemy';
 export default class Dude extends Enemy {
     name = 'mob';
     health = 100;
-    maxVelocity = 100;
+    maxVelocity = 150;
 
     defaultVelocity = {
         x: 0,
-        y: 100,
+        y: 150,
     };
 }

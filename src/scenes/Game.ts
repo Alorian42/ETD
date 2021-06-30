@@ -1,12 +1,16 @@
 import Phaser from 'phaser';
 import EnemyEngine from '../class/engine/Enemy';
 import SpawnerEngine from '../class/engine/Spawner';
+import TowerEngine from '../class/engine/Tower';
+import BulletEngine from '../class/engine/Bullet';
 
 export default class ETD extends Phaser.Scene {
   map!: Phaser.Tilemaps.Tilemap;
   tileset!: Phaser.Tilemaps.Tileset;
   enemyEngine!: EnemyEngine;
   spawnerEngine!: SpawnerEngine;
+  towerEngine!: TowerEngine;
+  bulletEngine!: BulletEngine;
 
   groundLayer!: Phaser.Tilemaps.TilemapLayer;
   upperLayer!: Phaser.Tilemaps.TilemapLayer;
@@ -18,6 +22,8 @@ export default class ETD extends Phaser.Scene {
 
   preload() {
     this.load.image('mob', 'assets/mob.png');
+    this.load.image('tower', 'assets/tower.png');
+    this.load.image('bullet', 'assets/bullet.png');
     // this.load.image('grass', 'assets/grass.png');
     // this.load.image('dirt', 'assets/dirt.png');
     this.load.image('base_tiles', 'assets/map/sci-fi-tiles.png');
@@ -33,6 +39,8 @@ export default class ETD extends Phaser.Scene {
 
   protected initEngines() {
     this.enemyEngine = new EnemyEngine(this);
+    this.bulletEngine = new BulletEngine(this, this.enemyEngine);
+    this.towerEngine = new TowerEngine(this, this.enemyEngine, this.bulletEngine);
     this.spawnerEngine = new SpawnerEngine(this, this.enemyEngine);
   }
 
@@ -48,5 +56,6 @@ export default class ETD extends Phaser.Scene {
 
   protected start() {
     this.spawnerEngine.spawnWave();
+    this.towerEngine.testBuilding();
   }
 }

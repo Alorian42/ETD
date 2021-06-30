@@ -1,4 +1,6 @@
-export default abstract class Enemy {
+import Enemy from '../enemy/Enemy';
+
+export default abstract class Tower {
     id: string = '';
     name: string = '';
     self?: Phaser.GameObjects.Sprite;
@@ -11,7 +13,7 @@ export default abstract class Enemy {
             x: 0,
             y: 0,
         };
-    maxVelocity = 16;
+    maxVelocity = 0;
     defaultVelocity: {
         x: number,
         y: number,
@@ -24,6 +26,13 @@ export default abstract class Enemy {
     removed = false;
     movableGracePeriod = 0;
     velocitySign = -1;
+
+    damage = 0;
+    radius = 0;
+    attackSpeed = 1000; // delay between attacks in MS
+
+    canAttack = true;
+    lastTarget: string | null = null;
 
     constructor(x: number, y: number) {
         this.x = x;
@@ -107,8 +116,20 @@ export default abstract class Enemy {
         }
     }
 
-    kill() {
+    destroy() {
         this.health = 0;
+    }
+
+    startAttack(enemy: Enemy) {
+        if (!this.canAttack) {
+            return;
+        }
+        this.canAttack = false;
+        this.lastTarget = enemy.id;
+        
+        window.setTimeout(() => {
+            this.canAttack = true;
+        }, this.attackSpeed);
     }
 
     get isDead(): boolean {

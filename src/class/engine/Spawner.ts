@@ -31,7 +31,7 @@ export default class SpawnerEngine extends Engine {
         const isHorizontal = Math.floor((Math.random() * 2)) === 1;
 
         if (isHorizontal) {
-            dude.defaultVelocity.x = 100;
+            dude.defaultVelocity.x = 150;
             dude.defaultVelocity.y = 0;
         }
     
