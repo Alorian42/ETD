@@ -24,6 +24,7 @@ export default abstract class Enemy {
     removed = false;
     movableGracePeriod = 0;
     velocitySign = -1;
+    scoreValue = 0;
 
     constructor(x: number, y: number) {
         this.x = x;
@@ -90,7 +91,7 @@ export default abstract class Enemy {
             this.hp.setActive(false);
             this.self.setVisible(false);
             this.hp.setVisible(false);
-            
+
             this.hp = undefined;
             this.self = undefined;
             this.removed = true;

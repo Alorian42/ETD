@@ -5,5 +5,6 @@ export default class Basic extends Tower {
 
     health = 1000;
     radius = 100;
-    damage = 50;
+    minDamage = 10;
+    maxDamage = 45;
 }

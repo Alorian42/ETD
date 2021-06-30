@@ -62,8 +62,8 @@ export default class TowerEngine extends Engine {
         }
     }
 
-    testBuilding() {
-        this.build(new Basic(400, 250));
+    buildBasicTower(x: number, y: number) {
+        this.build(new Basic(x, y));
     }
 
     protected getTowerId(): string {

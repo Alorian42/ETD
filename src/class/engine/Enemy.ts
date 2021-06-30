@@ -3,15 +3,18 @@ import { v4 as uuidv4 } from 'uuid';
 import Engine from './Engine';
 import { HP_STYLE } from '../../constants/global';
 import ETD from '../../scenes/Game';
+import ScoreEngine from './Score';
 
 export default class EnemyEngine extends Engine {
+    scoreEngine!: ScoreEngine
     enemies: Enemy[] = [];
     textNumberOfEnemies!: Phaser.GameObjects.Text;
 
-    constructor(scene: ETD) {
+    constructor(scene: ETD, scoreEngine: ScoreEngine) {
         super(scene);
+        this.scoreEngine = scoreEngine;
 
-        this.textNumberOfEnemies = this.scene.add.text(400, 50, this.enemies.length.toString());
+        this.textNumberOfEnemies = this.scene.add.text(400, 50, this.enemyText);
         this.textNumberOfEnemies.setDepth(200);
 
         this.scene.game.events.on('step', () => {
@@ -38,8 +41,9 @@ export default class EnemyEngine extends Engine {
             }
         });
 
+        this.enemies.filter(enemy => enemy.removed).map(enemy => this.scoreEngine.onEnemyKill(enemy));
         this.enemies = this.enemies.filter(e => !e.removed);
-        this.textNumberOfEnemies.setText(this.enemies.length.toString());
+        this.textNumberOfEnemies.setText(this.enemyText);
     }
 
     spawn(enemy: Enemy, x?: number, y?: number): string {
@@ -79,5 +83,9 @@ export default class EnemyEngine extends Engine {
 
     protected getEnemyId(): string {
         return uuidv4();
+    }
+
+    get enemyText() {
+        return `Enemies: ${this.enemies.length}`;
     }
 }

@@ -9,4 +9,6 @@ export default class Dude extends Enemy {
         x: 0,
         y: 150,
     };
+
+    scoreValue = 100;
 }

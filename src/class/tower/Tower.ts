@@ -27,7 +27,8 @@ export default abstract class Tower {
     movableGracePeriod = 0;
     velocitySign = -1;
 
-    damage = 0;
+    minDamage = 0;
+    maxDamage = 0;
     radius = 0;
     attackSpeed = 1000; // delay between attacks in MS
 
@@ -130,6 +131,10 @@ export default abstract class Tower {
         window.setTimeout(() => {
             this.canAttack = true;
         }, this.attackSpeed);
+    }
+
+    get damage(): number {
+        return Phaser.Math.Between(this.minDamage, this.maxDamage);
     }
 
     get isDead(): boolean {
